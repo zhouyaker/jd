@@ -1,12 +1,9 @@
 // 定义
 @font-face {
-  font-family: 'iconfont';  /* project id 3345474 */
-  src: url('');
-  src: url('?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_3345474_juix2cltss.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_3345474_juix2cltss.woff') format('woff'),
-  url('//at.alicdn.com/t/font_3345474_juix2cltss.ttf') format('truetype'),
-  url('#iconfont') format('svg');
+  font-family: 'iconfont';  /* Project id 3345474 */
+  src: url('//at.alicdn.com/t/font_3345474_w7868rzh35b.woff2?t=1650457323991') format('woff2'),
+       url('//at.alicdn.com/t/font_3345474_w7868rzh35b.woff?t=1650457323991') format('woff'),
+       url('//at.alicdn.com/t/font_3345474_w7868rzh35b.ttf?t=1650457323991') format('truetype');
 }
 * {
   margin: 0;
@@ -14,8 +11,13 @@
 }
 html {
   font-size: 0.266666vw;
+  box-sizing: border-box;
 }
 body {
   font-family: iconfont;
   font-size: 12rem;
+}
+input {
+  border:none;
+  outline:none
 }
