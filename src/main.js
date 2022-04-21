@@ -7,4 +7,5 @@ import store from './store'
 import 'normalize.css'
 import './style/base.scss'
 
+
 createApp(App).use(store).use(router).mount('#app')
