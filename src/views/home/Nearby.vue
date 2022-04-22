@@ -1,7 +1,9 @@
 <template>
   <div class="shop">
     <h3>附近店铺</h3>
-    <nearby-item v-for="(item,index) in data.shopList" :key="index" :item="item" />
+    <router-link :to="`/shop/${item.id}`" v-for="(item,index) in data.shopList" :key="index">
+      <nearby-item :item="item" />
+    </router-link>
     <toast v-if="toastData.toastShow">{{toastData.toastMessage}}</toast>
   </div>
 </template>

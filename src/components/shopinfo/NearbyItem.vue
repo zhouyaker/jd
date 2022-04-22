@@ -1,7 +1,7 @@
 <template>
   <div class="shop-item">
     <div class="item-left">
-      <img :src="item.imgUrl" alt="">
+      <img :src="item.imgUrl" alt="" v-if="item.imgUrl">
     </div>
     <div class="item-right">
       <div class="title">{{item.title}}</div>

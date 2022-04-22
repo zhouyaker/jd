@@ -1,9 +1,9 @@
 // 定义
 @font-face {
   font-family: 'iconfont';  /* Project id 3345474 */
-  src: url('//at.alicdn.com/t/font_3345474_w7868rzh35b.woff2?t=1650457323991') format('woff2'),
-       url('//at.alicdn.com/t/font_3345474_w7868rzh35b.woff?t=1650457323991') format('woff'),
-       url('//at.alicdn.com/t/font_3345474_w7868rzh35b.ttf?t=1650457323991') format('truetype');
+  src: url('//at.alicdn.com/t/font_3345474_7noz4ap30d2.woff2?t=1650591654282') format('woff2'),
+       url('//at.alicdn.com/t/font_3345474_7noz4ap30d2.woff?t=1650591654282') format('woff'),
+       url('//at.alicdn.com/t/font_3345474_7noz4ap30d2.ttf?t=1650591654282') format('truetype');
 }
 * {
   margin: 0;
@@ -24,8 +24,12 @@ input {
 button {
   border: none;
 }
-a,a:hover,a:active,a:visited,a:link,a:focus {
+a,
+a:hover,a:active,a:visited,a:link,a:focus {
   text-decoration: none;
   -webkit-tap-highlight-color:rgba(0,0,0,0);
-  }
+}
+i {
+  font-style: normal;
+}
 
