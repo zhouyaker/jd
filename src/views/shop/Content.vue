@@ -123,7 +123,7 @@ export default {
     background-color: #fff;
     .right_item {
       display: flex;
-      border-bottom: 1px solid #f1f1f1;
+      border-bottom: 1rem solid #f1f1f1;
       padding-bottom: 10rem;
       margin: 10rem 18rem 0 16rem;
       .pic {

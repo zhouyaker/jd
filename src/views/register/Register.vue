@@ -102,7 +102,7 @@ export default {
     input {
       width: 295rem;
       height: 48rem;
-      border: 1px solid rgba(0, 0, 0, 0.1);
+      border: 1rem solid rgba(0, 0, 0, 0.1);
       background-color: #f9f9f9;
       border-radius: 6rem;
       margin-bottom: 16rem;
@@ -126,7 +126,7 @@ export default {
   .link {
     text-align: center;
     .toLogin {
-      font-size: 14px;
+      font-size: 14rem;
       color: rgba(0, 0, 0, 0.5);
     }
   }

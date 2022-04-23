@@ -43,12 +43,14 @@
       </span>
       <div class="price">
         <span>总计:</span>
-        <p>￥{{sumPrice}}</p>
+        <p>¥{{sumPrice}}</p>
       </div>
     </div>
-    <div class="right">
-      去结算
-    </div>
+    <router-link :to="toOrder" @click="toOrderClick(total,shopId)">
+      <div class="right">
+        去结算
+      </div>
+    </router-link>
   </div>
   <toast v-if="toastData.toastShow">{{toastData.toastMessage}}</toast>
 </template>
@@ -72,6 +74,24 @@ const cartShowEffect = () => {
     cartShow.value = !cartShow.value
   }
   return { cartShow, changeCartShow }
+}
+/**
+ * 结算页面条状判断
+ */
+const orderEffect = (total, shopId, showToast) => {
+  const toOrderClick = () => {
+    if (!total.value) {
+      showToast('未选择任何商品')
+    }
+  }
+  const toOrder = computed(() => {
+    let toOrder = ''
+    if (total.value) {
+      toOrder = '/order/' + shopId
+    }
+    return toOrder
+  })
+  return { toOrderClick, toOrder }
 }
 
 export default {
@@ -164,7 +184,8 @@ export default {
       // 清空完毕隐藏购物车
       changeCartShow()
     }
-    return { total, sumPrice, currentList, allChecked, setAllClick, selectClick, clearCart, toastData, cartShow, changeCartShow }
+    const { toOrderClick, toOrder } = orderEffect(total, shopId, showToast)
+    return { shopId, total, sumPrice, currentList, allChecked, setAllClick, selectClick, clearCart, toastData, cartShow, changeCartShow, toOrderClick, toOrder }
   }
 }
 </script>
@@ -209,7 +230,7 @@ export default {
   }
   .item {
     display: flex;
-    border-bottom: 1px solid #f1f1f1;
+    border-bottom: 1rem solid #f1f1f1;
     padding-bottom: 10rem;
     margin: 10rem 18rem 0 16rem;
     .select {

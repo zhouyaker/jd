@@ -121,7 +121,7 @@ export default {
     text-align: center;
     .toReg,
     .forget {
-      font-size: 14px;
+      font-size: 14rem;
       color: rgba(0, 0, 0, 0.5);
     }
     .gap {

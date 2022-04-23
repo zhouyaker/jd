@@ -3,7 +3,7 @@ const Home = () => import('../views/home/Home.vue')
 const Login = () => import('../views/login/Login.vue')
 const Register = () => import('../views/register/Register.vue')
 const Shop = () => import('../views/shop/Shop.vue')
-
+const Order = () => import('../views/order/Order.vue')
 
 const routes = [
   {
@@ -41,7 +41,12 @@ const routes = [
     path: '/shop/:id',
     name: 'Shop',
     component: Shop
-  }
+  },
+  {
+    path: '/order/:shopid',
+    name: 'Order',
+    component: Order
+  },
 ]
 
 const router = createRouter({
