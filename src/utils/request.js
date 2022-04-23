@@ -6,7 +6,6 @@ axios.defaults.headers.post['content-Type'] = 'application/json'
 const post = (url, data = {}) => {
   return new Promise((resolve, reject) => {
     axios.post(url, data).then(res => {
-      // console.log(res)
       resolve(res)
     }).catch(
       err => {

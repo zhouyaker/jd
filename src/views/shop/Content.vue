@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content clearfix">
     <!-- 左侧导航 -->
     <div class="left">
       <div class="left_item" :class="{active:index==data.currentIndex}" v-for="(item,index) in classifyList" :key="index" @click="leftClick(index,item.name)">{{item.text}}</div>
@@ -21,9 +21,13 @@
               <span class="oldPrice"><del>￥{{item.oldPrice}}</del></span>
             </div>
             <div class="count">
-              <i class="minus iconfont">&#xe780;</i>
-              <span class="num">3</span>
-              <i class="plus iconfont">&#xe661;</i>
+              <i class="minus iconfont" v-show="cartData?.[shopId]?.goodsList?.[item.id]?.count" @click="changeGoodsNum(shopId,item,-1)">
+                &#xe780;
+              </i>
+              <span class="num" v-show="cartData?.[shopId]?.goodsList?.[item.id]?.count">
+                {{cartData?.[shopId]?.goodsList?.[item.id]?.count}}
+              </span>
+              <i class="plus iconfont" @click="changeGoodsNum(shopId,item,1)">&#xe661;</i>
             </div>
           </div>
         </div>
@@ -33,8 +37,9 @@
 </template>
 
 <script>
-import { reactive } from '@vue/reactivity'
+import { reactive, toRefs } from 'vue'
 import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
 import { get } from '../../utils/request.js'
 
 /**
@@ -42,7 +47,9 @@ import { get } from '../../utils/request.js'
  */
 const contentEffect = () => {
   const route = useRoute()
+  const store = useStore()
   const data = reactive({
+    shopName: '',
     currentIndex: 0,
     currentId: 1,
     currentName: 'all',
@@ -53,22 +60,35 @@ const contentEffect = () => {
   const getClassifyGoods = async (shopId, currentTab) => {
     const result = await get(`/api/shop/${shopId}/tab/${currentTab}`)
     data.classifyGoods = result.data.data
+    data.shopName = result.data.shopName
+    let { shopName } = data
+    // 将店铺名称添加到vuex中
+    store.commit('addShopName', { shopId, shopName })
   }
-  // 调用方法
+  // 第一次进入页面加载数据
   getClassifyGoods(shopId, 'all')
-  return { shopId, data, getClassifyGoods }
+  // 商品的增加与减少
+  const changeGoodsNum = (shopId, goods, flag) => {
+    // 将购物车数据添加到vuex
+    store.commit('changeGoodsNum', { shopId, goods, flag })
+  }
+  return { shopId, data, getClassifyGoods, changeGoodsNum }
 }
 
 export default {
   name: 'Content',
   props: ['classifyList'],
   setup() {
-    const { shopId, data, getClassifyGoods } = contentEffect()
+    const store = useStore()
+    // 获取vuex中的状态
+    const { cartData } = toRefs(store.state)
+    const { shopId, data, getClassifyGoods, changeGoodsNum } = contentEffect()
+    // 左侧导航栏
     const leftClick = (index, name) => {
       data.currentIndex = index
       getClassifyGoods(shopId, name)
     }
-    return { data, leftClick }
+    return { data, cartData, shopId, leftClick, changeGoodsNum }
   }
 }
 </script>

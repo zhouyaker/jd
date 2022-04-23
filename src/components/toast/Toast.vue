@@ -33,9 +33,10 @@ export const showToastEffect = () => {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.6);
   padding: 10rem;
   border-radius: 5rem;
   color: #fff;
+  font-size: 18rem;
 }
 </style>

@@ -14,6 +14,8 @@
     <shop-item :item="data.item" />
     <!-- 店铺商品 -->
     <Content :classifyList="data.item.classify" />
+    <!-- 结算 -->
+    <Settle />
   </div>
 </template>
 
@@ -22,6 +24,7 @@ import { reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ShopItem from '../../components/shopinfo/NearbyItem.vue'
 import Content from './Content.vue'
+import Settle from './Settle.vue'
 import { get } from '../../utils/request.js'
 
 /**
@@ -50,7 +53,8 @@ export default {
   name: 'Shop',
   components: {
     ShopItem,
-    Content
+    Content,
+    Settle
   },
   setup() {
     const { data, backClick } = shopInfoEfffect()
