@@ -25,7 +25,7 @@
       <!-- 附近店铺 -->
       <Nearby />
       <!-- 导航栏 -->
-      <tab-bar />
+      <tab-bar :currentIndex="0" />
     </div>
   </div>
 </template>

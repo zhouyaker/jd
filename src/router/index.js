@@ -4,6 +4,7 @@ const Login = () => import('../views/login/Login.vue')
 const Register = () => import('../views/register/Register.vue')
 const Shop = () => import('../views/shop/Shop.vue')
 const Order = () => import('../views/order/Order.vue')
+const OrderList = () => import('../views/orderlist/OrderList.vue')
 
 const routes = [
   {
@@ -47,6 +48,11 @@ const routes = [
     name: 'Order',
     component: Order
   },
+  {
+    path: '/orderlist',
+    name: 'OrderList',
+    component: OrderList
+  }
 ]
 
 const router = createRouter({

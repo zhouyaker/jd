@@ -1,7 +1,7 @@
 <template>
   <!-- 底部导航 -->
   <div class="tabbar">
-    <span class="item" :class="{active:index==currentIndex}" v-for="(item,index) in tabBarList" :key="index">
+    <span class="item" :class="{active:index==currentIndex}" v-for="(item,index) in tabBarList" :key="index" @click="tabBarClick(item.path)">
       <span class="app_item_iconfont iconfont" v-html="item.icon" />
       <span class="app_item_text">{{item.text}}</span>
     </span>
@@ -9,18 +9,27 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router'
 export default {
   name: 'TabBar',
+  props: ['currentIndex'],
   data() {
     return {
       tabBarList: [
-        { icon: '&#xe600;', text: '首页' },
-        { icon: '&#xe70b;', text: '购物车' },
-        { icon: '&#xe645;', text: '订单' },
-        { icon: '&#xe601;', text: '我的' }
-      ],
-      currentIndex: 0
+        { icon: '&#xe600;', text: '首页', path: '/' },
+        { icon: '&#xe70b;', text: '购物车', path: '/' },
+        { icon: '&#xe645;', text: '订单', path: '/orderlist' },
+        { icon: '&#xe601;', text: '我的', path: '/' }
+      ]
     }
+  },
+  setup() {
+    const router = useRouter()
+    // 点击导航进行跳转
+    const tabBarClick = path => {
+      router.replace({ path: path })
+    }
+    return { tabBarClick }
   }
 }
 </script>
