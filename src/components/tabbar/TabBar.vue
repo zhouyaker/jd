@@ -19,7 +19,7 @@ export default {
         { icon: '&#xe600;', text: '首页', path: '/' },
         { icon: '&#xe70b;', text: '购物车', path: '/' },
         { icon: '&#xe645;', text: '订单', path: '/orderlist' },
-        { icon: '&#xe601;', text: '我的', path: '/' }
+        { icon: '&#xe601;', text: '我的', path: '/profile' }
       ]
     }
   },

@@ -1,35 +1,18 @@
 <template>
   <div class="header">我的订单</div>
   <div class="container">
-    <div class="order">
+    <div class="order" v-for="item in orderList" :key="item.shopId">
       <div class="top">
-        <div class="title">沃尔玛</div>
-        <div class="status">已取消</div>
+        <div class="title">{{item.shopName}}</div>
+        <div class="status">已支付</div>
       </div>
       <div class="bottom">
         <div class="products">
-          <img src="https://markdown-1253389072.cos.ap-nanjing.myqcloud.com/202202261527635.png" alt="" />
-          <img src="https://markdown-1253389072.cos.ap-nanjing.myqcloud.com/202202261527635.png" alt="" />
+          <img v-for="productItem in item.itemList" :key="productItem.id" :src="productItem.imgUrl" alt="" />
         </div>
         <div class="info">
-          <span class="price">¥66.69</span>
-          <span class="count">共6件</span>
-        </div>
-      </div>
-    </div>
-    <div class="order">
-      <div class="top">
-        <div class="title">沃尔玛</div>
-        <div class="status">已取消</div>
-      </div>
-      <div class="bottom">
-        <div class="products">
-          <img src="https://markdown-1253389072.cos.ap-nanjing.myqcloud.com/202202261527635.png" alt="" />
-          <img src="https://markdown-1253389072.cos.ap-nanjing.myqcloud.com/202202261527635.png" alt="" />
-        </div>
-        <div class="info">
-          <span class="price">¥66.69</span>
-          <span class="count">共6件</span>
+          <span class="price">¥{{calcTotalPrice(item.itemList)}}</span>
+          <span class="count">{{item.itemList.length}}种/共{{calcTotalNum(item.itemList)}}件</span>
         </div>
       </div>
     </div>
@@ -39,10 +22,52 @@
 
 <script>
 import TabBar from '../../components/tabbar/TabBar.vue'
+import { ref } from 'vue'
+import { get } from '../../utils/request.js'
+
+/**
+ * 订单列表相关逻辑
+ */
+
+const orderListEffect = () => {
+  const orderList = ref([])
+  // 获取订单数据
+  const getOrderList = async () => {
+    const results = await get('/api/orderlist')
+    if (results.data.code == 0) {
+      orderList.value = results.data.data
+    } else {
+      orderList.value = []
+    }
+  }
+  getOrderList()
+  // 计算订单总价
+  const calcTotalPrice = goodsList => {
+    let totalPrice = 0
+    goodsList.forEach(element => {
+      totalPrice += element.count * element.newPrice
+    })
+    return totalPrice.toFixed(2)
+  }
+  // 计算商品总数
+  const calcTotalNum = goodsList => {
+    let totalNum = 0
+    goodsList.forEach(element => {
+      totalNum += element.count
+    })
+    return totalNum
+  }
+  return { orderList, calcTotalPrice, calcTotalNum }
+}
+
 export default {
   name: 'OrderList',
   components: {
     TabBar
+  },
+  setup() {
+    const { orderList, calcTotalPrice, calcTotalNum } = orderListEffect()
+    return { orderList, calcTotalPrice, calcTotalNum }
   }
 }
 TabBar

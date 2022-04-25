@@ -5,7 +5,10 @@ const Register = () => import('../views/register/Register.vue')
 const Shop = () => import('../views/shop/Shop.vue')
 const Order = () => import('../views/order/Order.vue')
 const OrderList = () => import('../views/orderlist/OrderList.vue')
-
+const Address = () => import('../views/address/Address.vue')
+const NewAddress = () => import('../views/address/NewAddress.vue')
+const ModifyAddress = () => import('../views/address/ModifyAddress.vue')
+const Profile = () => import('../views/my/profile.vue')
 const routes = [
   {
     path: '/',
@@ -52,6 +55,26 @@ const routes = [
     path: '/orderlist',
     name: 'OrderList',
     component: OrderList
+  },
+  {
+    path: '/address',
+    name: 'Address',
+    component: Address,
+  },
+  {
+    path: '/add',
+    name: 'NewAddress',
+    component: NewAddress
+  },
+  {
+    path: '/modify',
+    name: 'ModifyAddress',
+    component: ModifyAddress
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile
   }
 ]
 

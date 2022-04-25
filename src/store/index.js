@@ -1,4 +1,4 @@
-import { createStore } from 'vuex'
+import { createStore, Store, storeKey } from 'vuex'
 
 
 
@@ -30,8 +30,9 @@ const getLocalCartData = () => {
 export default createStore({
 
   state: {
-    // 从缓存获取数据
-    cartData: getLocalCartData()
+    // 从缓存获取购物车数据
+    cartData: getLocalCartData(),
+    address: {}
   },
   getters: {
   },
@@ -114,6 +115,12 @@ export default createStore({
         shopInfo.goodsList[key].checked = !beforeState
       }
       setLocalCartData(state)
+    },
+    /**
+     * 添加收货地址
+    */
+    setAddress(state, payload) {
+      state.address = payload
     }
   },
   actions: {

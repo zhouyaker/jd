@@ -5,15 +5,16 @@
         <div class="back" @click="backClick()">&#xe743;</div>
         <div class="text">确认订单</div>
       </div>
-      <div class="receiver">
-        <div class="left">
+      <div class="receiver" @click="changeAddress">
+        <div class="left" v-if="JSON.stringify(compAddress)!='{}'">
           <div class="title">收货地址</div>
-          <div class="address">北京理工大学国防科技园2号楼10层</div>
+          <div class="address">{{compAddress.address}}</div>
           <div class="info">
-            <div class="name">瑶妹（先生）</div>
-            <div class="">18911024266</div>
+            <div class="name">{{compAddress.name}}</div>
+            <div class="">{{compAddress.phone}}</div>
           </div>
         </div>
+        <div class="left no" v-else>请选择收货地址</div>
         <div class="right">
           <div class="icon">&#xe6a3;</div>
         </div>
@@ -93,10 +94,9 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
-import { computed } from '@vue/runtime-core'
 
 /**
  * 订单相关逻辑
@@ -144,6 +144,10 @@ const orderEffect = () => {
     showPrompt.value = true
     isComplete.value = true
   }
+  // 修改收货信息
+  const changeAddress = () => {
+    router.push({ name: 'Address' })
+  }
   // 继续支付
   const continueClick = () => {
     showPrompt.value = false
@@ -160,7 +164,12 @@ const orderEffect = () => {
     // 跳转订单页面
     router.replace({ name: 'OrderList' })
   }
-  return { shopId, shopName, cartItemData, sumPrise, sumCount, backClick, cancelClick, showPrompt, isExit, continueClick, submitClick, isComplete, closeClick }
+  // 获取vuex中的收货地址
+  const compAddress = computed(() => {
+    const address = store.state.address
+    return address
+  })
+  return { shopId, shopName, cartItemData, sumPrise, sumCount, backClick, cancelClick, showPrompt, isExit, continueClick, submitClick, isComplete, closeClick, changeAddress, compAddress }
 }
 /**
  * 显示更多相关逻辑
@@ -177,9 +186,9 @@ const showMoreEffect = () => {
 export default {
   name: 'Order',
   setup() {
-    const { shopId, shopName, cartItemData, sumPrise, sumCount, backClick, cancelClick, showPrompt, isExit, continueClick, submitClick, isComplete, closeClick } = orderEffect()
+    const { shopId, shopName, cartItemData, sumPrise, sumCount, backClick, cancelClick, showPrompt, isExit, continueClick, submitClick, isComplete, closeClick, changeAddress, compAddress } = orderEffect()
     const { showFlag, showMore } = showMoreEffect()
-    return { shopId, shopName, cartItemData, sumPrise, sumCount, backClick, cancelClick, showPrompt, isExit, continueClick, showFlag, showMore, submitClick, isComplete, closeClick }
+    return { shopId, shopName, cartItemData, sumPrise, sumCount, backClick, cancelClick, showPrompt, isExit, continueClick, showFlag, showMore, submitClick, isComplete, closeClick, changeAddress, compAddress }
   }
 }
 </script>
@@ -223,6 +232,7 @@ export default {
       padding: 20rem;
       justify-content: space-between;
       .left {
+        font-size: 20rem;
         .title {
           font-size: 16rem;
           color: #333;
@@ -241,6 +251,9 @@ export default {
             margin-right: 6rem;
           }
         }
+      }
+      .no {
+        line-height: 70rem;
       }
       .right {
         display: flex;
