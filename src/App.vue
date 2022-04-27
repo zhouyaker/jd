@@ -3,7 +3,13 @@
 </template>
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  mounted() {
+    window.onbeforeunload = function (e) {
+      var storage = window.localStorage
+      storage.clear()
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

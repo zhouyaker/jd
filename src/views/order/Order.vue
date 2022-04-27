@@ -8,7 +8,7 @@
       <div class="receiver" @click="changeAddress">
         <div class="left" v-if="JSON.stringify(compAddress)!='{}'">
           <div class="title">收货地址</div>
-          <div class="address">{{compAddress.address}}</div>
+          <div class="address">{{compAddress.position}}</div>
           <div class="info">
             <div class="name">{{compAddress.name}}</div>
             <div class="">{{compAddress.phone}}</div>
@@ -26,13 +26,13 @@
       <div class="shop-info">
         <div class="item" v-for="item in Object.keys(cartItemData).slice(0,2)" :key="item.id">
           <div class="left">
-            <img :src="cartItemData[item].imgUrl" alt="" class="image" />
+            <img :src="cartItemData[item].pic" alt="" class="image" />
           </div>
           <div class="right">
-            <div class="name">{{cartItemData[item].title}}</div>
+            <div class="name">{{cartItemData[item].name}}</div>
             <div class="price">
-              <div class="left">¥{{cartItemData[item].newPrice}} x {{cartItemData[item].count}}</div>
-              <div class="right">¥{{(cartItemData[item].newPrice*cartItemData[item].count).toFixed(2)}}</div>
+              <div class="left">¥{{cartItemData[item].newprice}} x {{cartItemData[item].count}}</div>
+              <div class="right">¥{{(cartItemData[item].newprice*cartItemData[item].count).toFixed(2)}}</div>
             </div>
           </div>
         </div>
@@ -41,16 +41,16 @@
       <div class="shop-info" v-show="!showFlag">
         <div v-for="item of Object.keys(cartItemData).slice(2)" :key="item.id" class="item">
           <div class="left">
-            <img :src="cartItemData[item].imgUrl" alt="" class="image" />
+            <img :src="cartItemData[item].pic" alt="" class="image" />
           </div>
           <div class="right">
-            <div class="name">{{ cartItemData[item].title }}</div>
+            <div class="name">{{ cartItemData[item].name }}</div>
             <div class="price">
               <div class="left">
-                ¥{{ cartItemData[item].newPrice }} x {{ cartItemData[item].count }}
+                ¥{{ cartItemData[item].newprice }} x {{ cartItemData[item].count }}
               </div>
               <div class="right">
-                ¥{{ ( cartItemData[item].newPrice * cartItemData[item].count ).toFixed(2) }}
+                ¥{{ ( cartItemData[item].newprice * cartItemData[item].count ).toFixed(2) }}
               </div>
             </div>
           </div>
@@ -97,6 +97,7 @@
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
+import { post } from '../../utils/request.js'
 
 /**
  * 订单相关逻辑
@@ -117,7 +118,7 @@ const orderEffect = () => {
   const sumPrise = computed(() => {
     let sumPrice = 0
     for (const key in cartItemData) {
-      sumPrice += cartItemData[key].count * cartItemData[key].newPrice
+      sumPrice += cartItemData[key].count * cartItemData[key].newprice
     }
     return sumPrice.toFixed(2)
   })
@@ -140,9 +141,19 @@ const orderEffect = () => {
     isExit.value = true
   }
   // 提交订单相关事件
-  const submitClick = () => {
-    showPrompt.value = true
-    isComplete.value = true
+  const submitClick = async () => {
+    // 获取要提交的基本信息
+    const userId = localStorage.userId
+    // 发起添加订单请求
+    const result = await post(`/order/add/${userId}`, { shopName: shopName, data: cartItemData })
+    if (result.data.code == 0) {
+      showPrompt.value = true
+      isComplete.value = true
+      // 清空购物车
+      store.commit('clearCart', { shopId })
+    } else {
+      console.log(result.data.message)
+    }
   }
   // 修改收货信息
   const changeAddress = () => {
@@ -157,10 +168,8 @@ const orderEffect = () => {
     router.replace('/shop/' + shopId)
   }
 
-  // 提交订单后购物车进行清空
-  const closeClick = shopId => {
-    // 清空购物车
-    store.commit('clearCart', { shopId })
+  // 关闭提示之后页面进行跳转
+  const closeClick = () => {
     // 跳转订单页面
     router.replace({ name: 'OrderList' })
   }

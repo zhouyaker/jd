@@ -21,7 +21,7 @@ const nearbyEffect = showToast => {
   })
   const getList = async () => {
     try {
-      const results = await get('/api/home/nearby')
+      const results = await get('/shop')
       if (results.data.code === 0) {
         data.shopList = results.data.data
       } else {

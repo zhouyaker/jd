@@ -20,11 +20,11 @@ const NavBarEffect = showToast => {
   })
   const getList = async () => {
     try {
-      const results = await get('/api/home/nav')
+      const results = await get('/nav')
       if (results.data.code === 0) {
         data.navList = results.data.data
       } else {
-        showToast('获取店铺数据失败')
+        showToast('获取分类页数据失败')
       }
     } catch (err) {
       showToast('请求接口失败')

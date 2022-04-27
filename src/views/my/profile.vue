@@ -4,7 +4,7 @@
     <div class="pic"></div>
   </div>
   <div class="main"></div>
-  <tab-bar :currentIndex="3" />
+  <tab-bar :currentIndex="2" />
 </template>
 
 <script>

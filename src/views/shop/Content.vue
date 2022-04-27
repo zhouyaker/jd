@@ -8,17 +8,17 @@
     <div class="right">
       <div class="right_item" v-for="(item,index) in data.classifyGoods" :key="index">
         <div class="pic">
-          <img :src="item.imgUrl" alt="">
+          <img :src="item.pic" alt="">
         </div>
         <div class="info">
           <div class="title">
-            {{item.title}}
+            {{item.name}}
           </div>
           <div class="sales">月售{{item.sales}}件</div>
           <div class="price">
             <div>
-              <span class="newPrice">￥{{item.newPrice}}</span>
-              <span class="oldPrice"><del>￥{{item.oldPrice}}</del></span>
+              <span class="newPrice">￥{{item.newprice}}</span>
+              <span class="oldPrice"><del>￥{{item.oldprice}}</del></span>
             </div>
             <div class="count">
               <i class="minus iconfont" v-show="cartData?.[shopId]?.goodsList?.[item.id]?.count" @click="changeGoodsNum(shopId,item,-1)">
@@ -58,7 +58,7 @@ const contentEffect = () => {
   const shopId = route.params.id
   // 获取分类商品数据
   const getClassifyGoods = async (shopId, currentTab) => {
-    const result = await get(`/api/shop/${shopId}/tab/${currentTab}`)
+    const result = await get(`/shop/${shopId}/tabs/${currentTab}`)
     data.classifyGoods = result.data.data
     data.shopName = result.data.shopName
     let { shopName } = data

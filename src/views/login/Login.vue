@@ -4,7 +4,7 @@
       <img src="../../assets/img/login/login.png" alt="">
     </div>
     <div class="input">
-      <input type="text" class="usernamae" placeholder="请输入手机号" v-model="data.phone">
+      <input type="text" class="username" placeholder="请输入手机号" v-model="data.phone">
       <input type="text" class="password" placeholder="请输入密码" v-model="data.password">
     </div>
     <div class="button">
@@ -47,12 +47,16 @@ const loginEffect = showToast => {
     }
     try {
       // 请求接口
-      let res = await post('/api/user/login', { phone: data.phone, password: data.password })
-      if (res.data.code === '0') {
+      let res = await post('/user/login', { account: data.phone, password: data.password })
+      if (res.data.code === 0) {
         localStorage.setItem('isLogin', 'true')
-        router.replace({ name: 'Home' })
+        localStorage.setItem('userId', res.data.data.id)
+        showToast('登录成功')
+        setTimeout(() => {
+          router.replace({ name: 'Home' })
+        }, 1500)
       } else {
-        showToast('登录失败')
+        showToast(res.data.message)
       }
     } catch (error) {
       showToast('发送请求失败')
@@ -61,7 +65,7 @@ const loginEffect = showToast => {
   // 跳转到注册页面
   const toReg = () => {
     console.log('注册页面')
-    router.replace({ name: 'Register' })
+    router.replace({ path: '/register' })
   }
   return { login, data, toReg }
 }

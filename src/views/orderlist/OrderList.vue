@@ -6,9 +6,17 @@
         <div class="title">{{item.shopName}}</div>
         <div class="status">已支付</div>
       </div>
-      <div class="bottom">
+      <div class="bottom" @click="showAllClick(item.shopId)">
         <div class="products">
-          <img v-for="productItem in item.itemList" :key="productItem.id" :src="productItem.imgUrl" alt="" />
+          <img v-for="productItem in item.itemList.slice(0,3)" :key="productItem.id" :src="productItem.imgUrl" alt="" />
+          <span v-if="item.itemList.length>3">
+            <i class="more" v-if="currentId!=item.shopId">&#xe665;</i>
+            <i class="more" v-else>&#xe695;</i>
+          </span>
+
+        </div>
+        <div class="products" :class="{hide:currentId!==item.shopId}">
+          <img v-for="productItem in item.itemList.slice(3)" :key="productItem.id" :src="productItem.imgUrl" alt="" />
         </div>
         <div class="info">
           <span class="price">¥{{calcTotalPrice(item.itemList)}}</span>
@@ -17,7 +25,7 @@
       </div>
     </div>
   </div>
-  <tab-bar :currentIndex="2" />
+  <tab-bar :currentIndex="1" />
 </template>
 
 <script>
@@ -30,15 +38,61 @@ import { get } from '../../utils/request.js'
  */
 
 const orderListEffect = () => {
+  const userId = localStorage.userId
   const orderList = ref([])
+
+  // 订单是否全部显示
+  let showAll = ref(false)
+  let currentId = ref(0)
+  const showAllClick = id => {
+    if (currentId.value == id) {
+      currentId.value = 0
+    } else {
+      currentId.value = id
+    }
+  }
   // 获取订单数据
   const getOrderList = async () => {
-    const results = await get('/api/orderlist')
+    const orderArr = [] // 用于存放最终的数据
+    const results = await get(`/order/${userId}`)
     if (results.data.code == 0) {
-      orderList.value = results.data.data
-    } else {
-      orderList.value = []
+      const orderList = results.data.data
+      orderList.forEach(j => {
+        let flag = false
+        // 先遍历数组，看看是否已经存在同商店商品
+        orderArr.forEach(k => {
+          if (k.shopId == j.shopid) {
+            flag = true
+            k.itemList.push({
+              id: j.id,
+              name: j.name,
+              imgUrl: j.img,
+              newPrice: j.newprice,
+              count: j.count,
+              checked: j.checked
+            })
+          }
+        })
+        // 如果不存在，将商店的数组信息进行添加
+        if (!flag) {
+          orderArr.push({
+            shopId: j.shopid,
+            shopName: j.shopname,
+            itemList: [
+              {
+                id: j.id,
+                name: j.name,
+                imgUrl: j.img,
+                newPrice: j.newprice,
+                count: j.count,
+                checked: j.checked
+              }
+            ]
+          })
+        }
+      })
     }
+    orderList.value = orderArr
   }
   getOrderList()
   // 计算订单总价
@@ -57,7 +111,7 @@ const orderListEffect = () => {
     })
     return totalNum
   }
-  return { orderList, calcTotalPrice, calcTotalNum }
+  return { orderList, calcTotalPrice, calcTotalNum, showAll, currentId, showAllClick }
 }
 
 export default {
@@ -66,8 +120,8 @@ export default {
     TabBar
   },
   setup() {
-    const { orderList, calcTotalPrice, calcTotalNum } = orderListEffect()
-    return { orderList, calcTotalPrice, calcTotalNum }
+    const { orderList, calcTotalPrice, calcTotalNum, showAll, currentId, showAllClick } = orderListEffect()
+    return { orderList, calcTotalPrice, calcTotalNum, showAll, currentId, showAllClick }
   }
 }
 TabBar
@@ -114,17 +168,34 @@ TabBar
       }
     }
     .bottom {
+      position: relative;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
       .products {
+        display: flex;
+        align-items: center;
+        width: 200rem;
         img {
           width: 40rem;
           height: 40rem;
           margin-right: 12rem;
+          margin-bottom: 10rem;
+        }
+        .more {
+          margin-left: 10rem;
+          font-size: 20rem;
         }
       }
+      .hide {
+        display: none;
+      }
       .info {
+        position: absolute;
+        z-index: 10;
+        top: 2rem;
+        right: 0;
         display: flex;
         flex-direction: column;
         .price {

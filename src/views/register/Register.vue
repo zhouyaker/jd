@@ -48,18 +48,20 @@ const registerEffect = showToast => {
       // 前端表单验证判断两次密码是否一致
       if (data.password !== data.confirmPassword) {
         showToast('两次密码不一致')
+        return
       }
 
       // 请求接口
-      let res = await post('/api/user/register', { phone: data.phone, password: data.password })
+      let res = await post('/user/register', { account: data.phone, password: data.password })
       if (res.data.code === 0) {
-        showToast('注册成功')
+        showToast(res.data.message)
         setTimeout(() => {
           localStorage.setItem('isLogin', 'true')
+          localStorage.setItem('userId', res.data.data.id)
           router.replace({ name: 'Home' })
         }, 2000)
       } else {
-        showToast('注册失败')
+        showToast(res.data.message)
       }
     } catch (error) {
       showToast('发送请求失败')
@@ -67,7 +69,7 @@ const registerEffect = showToast => {
   }
   // 跳转登录页面
   const toLogin = () => {
-    router.replace({ name: 'Login' })
+    router.replace({ path: '/login' })
   }
   return { toLogin, data, register }
 }

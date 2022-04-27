@@ -39,12 +39,12 @@ const shopInfoEfffect = () => {
   // 获取店铺信息
   const id = route.params.id
   const getData = async () => {
-    const result = await get(`/api/shop/${id}`)
+    const result = await get(`/shop/${id}`)
     data.item = result.data.data
   }
   getData()
   const backClick = () => {
-    router.back()
+    router.replace({ path: '/' })
   }
   return { data, backClick }
 }

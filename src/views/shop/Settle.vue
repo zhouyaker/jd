@@ -16,16 +16,16 @@
         <i class="unChecked" v-else>&#xe619;</i>
       </div>
       <div class="pic">
-        <img :src="item.imgUrl" alt="">
+        <img :src="item.pic" alt="">
       </div>
       <div class="info">
         <div class="title">
-          {{item.title}}
+          {{item.name}}
         </div>
         <div class="price">
           <div>
-            <span class="newPrice">￥{{item.newPrice}}</span>
-            <span class="oldPrice"><del>￥{{item.oldPrice}}</del></span>
+            <span class="newPrice">￥{{item.newprice}}</span>
+            <span class="oldPrice"><del>￥{{item.oldprice}}</del></span>
           </div>
           <div class="count">
             <span class="num">
@@ -136,7 +136,7 @@ export default {
       if (goodsList) {
         for (const key in goodsList) {
           if (goodsList[key].checked) {
-            sum += goodsList[key].newPrice * goodsList[key].count
+            sum += goodsList[key].newprice * goodsList[key].count
           }
         }
       }

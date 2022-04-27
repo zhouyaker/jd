@@ -51,10 +51,12 @@ export default {
     }
     .info {
       display: flex;
+      flex-wrap: wrap;
       span {
+        min-width: 25%;
         font-size: 13rem;
         color: #333;
-        margin-right: 16rem;
+        margin-right: 10rem;
         margin-bottom: 8rem;
       }
     }

@@ -25,20 +25,28 @@
     </div>
     <button class="save" @click="saveClick">保存</button>
   </div>
+  <toast v-if="toastData.toastShow">{{toastData.toastMessage}}</toast>
 </template>
 
 
 <script>
 import { reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import Toast, { showToastEffect } from '../../components/toast/Toast.vue'
+
+import { get } from '../../utils/request.js'
 
 export default {
   name: 'Address',
+  components: {
+    Toast
+  },
   setup() {
     const route = useRoute()
     const router = useRouter()
-    const oldAddress = route.query
-    const position = oldAddress.address.split('-')
+    const { toastData, showToast } = showToastEffect()
+    const oldAddress = route.params
+    const position = oldAddress.position.split('-')
     const data = reactive({
       city: position[0],
       area: position[1],
@@ -53,13 +61,19 @@ export default {
     const saveClick = () => {
       // 将地址保存
       const newAddress = [data.city, data.area, data.floor].join('-')
-      router.replace({ path: '/address', query: { id: oldAddress.id, address: newAddress, name: data.name, phone: data.phone } })
+      router.replace({ name: 'Address', params: { id: oldAddress.id, address: newAddress, name: data.name, phone: data.phone } })
     }
     // 删除该地址信息
     const deleteClick = () => {
-      // TODO
+      const id = oldAddress.id
+      get(`/address/delete/${id}`).then(res => {
+        showToast(res.data.message)
+        setTimeout(() => {
+          router.replace({ name: 'Address' })
+        }, 1500)
+      })
     }
-    return { backClick, data, saveClick }
+    return { backClick, data, saveClick, toastData, deleteClick }
   }
 }
 </script>

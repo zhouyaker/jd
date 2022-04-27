@@ -7,7 +7,7 @@
     <div class="main">
       <div class="receiver" v-for="item in addressList" :key="item.id">
         <div class="left">
-          <div class="address">{{item.address}}</div>
+          <div class="address">{{item.position}}</div>
           <div class="info">
             <div class="name">{{item.name}}</div>
             <div class="phone">{{item.phone}}</div>
@@ -25,56 +25,87 @@
       </div>
     </div>
   </div>
+  <toast v-if="toastData.toastShow">{{toastData.toastMessage}}</toast>
 </template>
 
 <script>
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import Toast, { showToastEffect } from '../../components/toast/Toast.vue'
+
+import { get, post } from '../../utils/request.js'
+
+/**
+ * 收货地址相关的逻辑
+ */
+const addressEffect = () => {
+  // 从内存中获取用户id
+  const userId = localStorage.userId
+  const addressList = ref([])
+  const getAddress = async () => {
+    let res = await get('/address/' + userId)
+    addressList.value = res.data.data
+  }
+  getAddress()
+
+  return { getAddress, addressList, userId }
+}
+
 export default {
   name: 'Address',
+  components: { Toast },
   setup() {
     const route = useRoute()
     const router = useRouter()
     const store = useStore()
-    const addressList = ref([])
-    addressList.value = [
-      { id: 1, address: '北京理工大学-国防科技园-2号楼10层', name: '瑶妹（先生）', phone: '18911024266' },
-      { id: 2, address: '西安石油大学-鄠邑校区-15号楼1层', name: '周亚博', phone: '15596363427' }
-    ]
-    // 获取地址
-    const address = route.query
+    const { toastData, showToast } = showToastEffect()
+    const { getAddress, addressList, userId } = addressEffect()
+    // 获取要修改的地址
+    const address = route.params
     if (JSON.stringify(address) != '{}') {
       // 如果有id属性，说明这是一个修改的地址，而不是新建的地址
       if (address.id) {
         // 进行替换
-        addressList.value[address.id - 1] = address
+        post(`/address/modify/${userId}`, address).then(res => {
+          getAddress()
+          showToast(res.data.message)
+        })
       } else {
         // 新建的地址添加到最后
-        const id = addressList.value[addressList.value.length - 1].id + 1
-        address.id = id
-        addressList.value.push(address)
+        post(`/address/new/${userId}`, address).then(res => {
+          getAddress()
+          showToast(res.data.message)
+        })
       }
     }
+
     // 返回订单页面
     const backClick = () => {
       router.back(-1)
     }
     // 选择收货地址
     const chooseClick = id => {
-      store.commit('setAddress', addressList.value[id - 1])
-      router.replace({ path: '/order/1' })
+      addressList.value.forEach(item => {
+        if (item.id == id) {
+          store.commit('setAddress', item)
+        }
+      })
+      router.back()
     }
     // 修改收货地址
     const modifyClick = id => {
-      router.push({ path: '/modify', query: addressList.value[id - 1] })
+      addressList.value.forEach(item => {
+        if (item.id == id) {
+          router.push({ name: 'ModifyAddress', params: item })
+        }
+      })
     }
     // 添加收货地址
     const addClick = () => {
       router.push({ path: '/add' })
     }
-
-    return { backClick, addressList, chooseClick, addClick, modifyClick }
+    return { backClick, addressList, chooseClick, addClick, modifyClick, toastData }
   }
 }
 </script>
@@ -164,4 +195,4 @@ export default {
     }
   }
 }
-</style>
+</style>  

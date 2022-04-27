@@ -84,7 +84,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (localStorage.isLogin === "true" || to.name === "Login" || to.name === "Register") {
+  if (localStorage?.isLogin === "true" || to.name === "Login" || to.name === "Register") {
     next()
   } else {
     console.log('请先登录才能进行访问')

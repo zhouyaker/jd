@@ -48,8 +48,8 @@ export default {
     }
     const saveClick = () => {
       // 将地址保存
-      const position = data.city + data.area + data.floor
-      router.replace({ path: '/address', query: { address: position, name: data.name, phone: data.phone } })
+      const position = data.city + '-' + data.area + '-' + data.floor
+      router.replace({ name: 'Address', params: { address: position, name: data.name, phone: data.phone } })
     }
     return { backClick, data, saveClick }
   }
